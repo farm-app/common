@@ -1,0 +1,71 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.0'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'java-library'
+    id 'maven-publish'
+
+    id "io.freefair.lombok" version "8.6"
+}
+
+group = 'ru.rtln.common'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+repositories {
+    mavenCentral()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            credentials {
+                username 'admin'
+                password 'aJ3aN5%HJPIG'
+            }
+            url "http://45.141.76.83:9091/repository/maven-snapshots/"
+            allowInsecureProtocol = true
+        }
+    }
+}
+
+ext {
+    springCloudVersion="2023.0.2"
+    jacksonDatabindVersion="2.15.2"
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+dependencies {
+    implementation "org.springframework.security:spring-security-web"
+    implementation "org.springframework.security:spring-security-config"
+    implementation "jakarta.servlet:jakarta.servlet-api"
+    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonDatabindVersion}"
+}
